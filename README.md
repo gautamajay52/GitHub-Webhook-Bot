@@ -1,3 +1,4 @@
+
 # GitHub-Webhook-Bot 🤖
 Simple Telegram Bot, which will listen to GitHub Webhook and inform via Telegram
 
@@ -6,11 +7,12 @@ Simple Telegram Bot, which will listen to GitHub Webhook and inform via Telegram
 1) Go to `src/helper.h` ---> [Here](https://github.com/gautamajay52/GitHub-Webhook-Bot/blob/main/src/helper.h#L10)
 2) Edit your Bot Token.
 3) Edit your ID.
-4) Add your forwading url in webhook section of your repo.
+4) Add your PORT.
+5) Add your forwading url in webhook section of your repo.
     ```bash
     https://your-forwading-url/github
     ```
-5) Set your webhook(Only if you wanted to receive `/start` command feedback)
+6) Set your webhook(Only if you wanted to receive `/start` command feedback)
     ```bash
     curl "https://api.telegram.org/bot<BOT_TOKEN>/setWebhook?url=https://your-forwading-url/telegram"
     ```
@@ -33,6 +35,9 @@ g++ src/main.cpp -lpthread -lboost_system -lz -o git.out
 ./git.out
 
 ```
+
+## Easy 👌
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 ## Credits: 🌎
 * [GautamKumar(me)](https://github.com/gautamajay52) for [Nothing](https://github.com/gautamajay52/GitHub-Webhook-Bot)😬

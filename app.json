@@ -1,0 +1,22 @@
+{
+    "name": "Github Notify Bot",
+    "description": "Notify Github Webhook via Telegram",
+    "repository": "https://github.com/gautamajay52/GitHub-Webhook-Bot",
+    "keywords": [
+        "github",
+        "webhook",
+        "cpp",
+        "crow"
+    ],
+    "env": {
+        "USER_ID": {
+            "description": "This can your ID or any channel/group ID",
+            "value": "539295917"
+        },
+        "TOKEN": {
+            "description": "get this value from @BotFather",
+            "value": ""
+        }
+    },
+    "stack": "container"
+}

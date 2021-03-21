@@ -31,10 +31,10 @@ int main()
     auto x = crow::json::load(req.body);
     if (!x)
         return crow::response(400);
-    int user_id = x["message"]["from"]["id"].i();
+    int user = x["message"]["from"]["id"].i();
     string text = x["message"]["text"].s();
-    if (user_id == usr_id && text == "/start") {
-        send_mess(rep_mess);
+    if (text == "/start") {
+        send_mess(rep_mess, user);
     }
     return crow::response(200);
     });
@@ -51,7 +51,7 @@ int main()
 
     string message = parse_json(x, events);
 
-    send_mess(message);
+    send_mess(message, usr_id);
     
     string ret_mess = "By gautamajay52";
     std::ostringstream os;
@@ -60,5 +60,5 @@ int main()
     });
 
 
-    app.port(port).multithreaded().run();
+    app.port(PORT).multithreaded().run();
 }

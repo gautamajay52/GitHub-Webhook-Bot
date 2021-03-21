@@ -7,20 +7,22 @@
 
 using namespace std;
 
-int usr_id = 539295917;      // Edit your ID here
-string usr_bot = "1154882:AAEe--your--bot--token--PZNxGl7MpBsy5ugvhUw"; // Edit your Bot Token here
+int usr_id = atoi(getenv("USER_ID"));
+string usr_bot = getenv("TOKEN");
 
-int port = 18080;  // Change port if you want
+char *port = getenv("PORT");
+uint16_t PORT = static_cast<uint16_t>(port != NULL ? atoi(port) : 18080);
 
-string rep_mess = "Hey! I am working ⚡";  // Reply message after sending /start to your bot (only works if webhook is set)
+string rep_mess = "Hey! I am working ⚡"; // Reply message after sending /start to your bot (only works if webhook is set)
 
-void send_mess(string message) {
-    string gcmd = string("curl ") + "-X " + "POST " + "-H " + "'Content-Type=application/json' " + "-d " + "'chat_id=" + to_string(usr_id) + "&text=" + message + "&disable_notification=false&parse_mode=markdown&disable_web_page_preview=true' " + "https://api.telegram.org/bot" + usr_bot + "/sendMessage";
+void send_mess(string message, int usr)
+{
+    string gcmd = string("curl ") + "-X " + "POST " + "-H " + "'Content-Type=application/json' " + "-d " + "'chat_id=" + to_string(usr) + "&text=" + message + "&disable_notification=false&parse_mode=markdown&disable_web_page_preview=true' " + "https://api.telegram.org/bot" + usr_bot + "/sendMessage";
     system(gcmd.c_str());
 }
 
-
-string parse_json(crow::json::rvalue& x, string& events) {
+string parse_json(crow::json::rvalue &x, string &events)
+{
 
     string mess;
 
@@ -38,61 +40,71 @@ string parse_json(crow::json::rvalue& x, string& events) {
     //     //Do-Nothing :)
     // }
 
-    if(events == "fork") {
-        mess = "🤖: [" + usr_name + "]"+"(" + usr_url + ")" + " *forked* " + "[" + repo_name + "]" + "(" + repo_url + ")👌" + "\n\n" + "*Forks*:: " + to_string(forks) + "🍴 " + "*Stars*:: " + to_string(stars) + " ⭐\n\n🚧 #forkee";
+    if (events == "fork")
+    {
+        mess = "🤖: [" + usr_name + "]" + "(" + usr_url + ")" + " *forked* " + "[" + repo_name + "]" + "(" + repo_url + ")👌" + "\n\n" + "*Forks*:: " + to_string(forks) + "🍴 " + "*Stars*:: " + to_string(stars) + " ⭐\n\n🚧 #forkee";
     }
 
-    else if (events=="star" || events=="issues") {
+    else if (events == "star" || events == "issues")
+    {
         string c_d = x["action"].s();
-        if (c_d == "created") {
-            mess = "🤖: [" + usr_name + "]"+"(" + usr_url + ")" + " *starred* " + "[" + repo_name + "]" + "(" + repo_url + ")🔥" + "\n\n" + "*Forks*:: " + to_string(forks) + "🍴 " + "*Stars*:: " + to_string(stars) + " ⭐\n\n🚧 #starred";
+        if (c_d == "created")
+        {
+            mess = "🤖: [" + usr_name + "]" + "(" + usr_url + ")" + " *starred* " + "[" + repo_name + "]" + "(" + repo_url + ")🔥" + "\n\n" + "*Forks*:: " + to_string(forks) + "🍴 " + "*Stars*:: " + to_string(stars) + " ⭐\n\n🚧 #starred";
         }
-        else if (c_d == "deleted") {
-            mess = "🤖: [" + usr_name + "]"+"(" + usr_url + ")" + " *unstarred* " + "[" + repo_name + "]" + "(" + repo_url + ")🤬" + "\n\n" + "*Forks*:: " + to_string(forks) + "🍴 " + "*Stars*:: " + to_string(stars) + " ⭐\n\n🚧 #unstarred";
+        else if (c_d == "deleted")
+        {
+            mess = "🤖: [" + usr_name + "]" + "(" + usr_url + ")" + " *unstarred* " + "[" + repo_name + "]" + "(" + repo_url + ")🤬" + "\n\n" + "*Forks*:: " + to_string(forks) + "🍴 " + "*Stars*:: " + to_string(stars) + " ⭐\n\n🚧 #unstarred";
         }
-        else if (c_d=="opened") {
+        else if (c_d == "opened")
+        {
             string isu_title = x["issue"]["title"].s();
             string isu_url = x["issue"]["html_url"].s();
             int isu_num = x["issue"]["number"].i();
-            mess = "🤖: [" + usr_name + "]"+"(" + usr_url + ")" + " *created an issue* " + "[#" + to_string(isu_num) + "]" + "(" + isu_url + ") 🥺" + "\n\n" + "👉 " + isu_title +"\n\n🚧 #issue";
+            mess = "🤖: [" + usr_name + "]" + "(" + usr_url + ")" + " *created an issue* " + "[#" + to_string(isu_num) + "]" + "(" + isu_url + ") 🥺" + "\n\n" + "👉 " + isu_title + "\n\n🚧 #issue";
         }
-        else if (c_d=="closed") {
+        else if (c_d == "closed")
+        {
             string isu_title = x["issue"]["title"].s();
             string isu_url = x["issue"]["html_url"].s();
             int isu_num = x["issue"]["number"].i();
-            mess = "🤖: [" + usr_name + "]"+"(" + usr_url + ")" + " *closed an issue* " + "[#" + to_string(isu_num) + "]" + "(" + isu_url + ") 🥺" + "\n\n🚧 #issue";
+            mess = "🤖: [" + usr_name + "]" + "(" + usr_url + ")" + " *closed an issue* " + "[#" + to_string(isu_num) + "]" + "(" + isu_url + ") 🥺" + "\n\n🚧 #issue";
         }
     }
-    else if (events=="issue_comment") {
+    else if (events == "issue_comment")
+    {
         string c_d = x["action"].s();
         string isu_title = x["issue"]["title"].s();
         string isu_url = x["issue"]["html_url"].s();
         string isu_comm = x["comment"]["body"].s();
         int isu_num = x["issue"]["number"].i();
-        if (c_d=="created") {
-            mess = "🤖: [" + usr_name + "]"+"(" + usr_url + ")" + " *commented at* " + "[#" + to_string(isu_num) + "]" + "(" + isu_url + ") 👀" + "\n\n" + "👉 " + isu_comm +"\n\n🚧 #issue";
+        if (c_d == "created")
+        {
+            mess = "🤖: [" + usr_name + "]" + "(" + usr_url + ")" + " *commented at* " + "[#" + to_string(isu_num) + "]" + "(" + isu_url + ") 👀" + "\n\n" + "👉 " + isu_comm + "\n\n🚧 #issue";
         }
-        if (c_d=="edited") {
+        if (c_d == "edited")
+        {
             string bef_comm = x["changes"]["body"]["from"].s();
-            mess = "🤖: [" + usr_name + "]"+"(" + usr_url + ")" + " *edited at* " + "[#" + to_string(isu_num) + "]" + "(" + isu_url + ") 👀" + "\n\n" + "👉*From:* " + bef_comm + "\n👉*To:* " + isu_comm +"\n\n🚧 #issue";
+            mess = "🤖: [" + usr_name + "]" + "(" + usr_url + ")" + " *edited at* " + "[#" + to_string(isu_num) + "]" + "(" + isu_url + ") 👀" + "\n\n" + "👉*From:* " + bef_comm + "\n👉*To:* " + isu_comm + "\n\n🚧 #issue";
         }
-        else if (c_d == "deleted") {
-            mess = "🤖: [" + usr_name + "]"+"(" + usr_url + ")" + " *deleted at* " + "[#" + to_string(isu_num) + "]" + "(" + isu_url + ") 👀" + "\n\n" + "👉 " + isu_comm +"\n\n🚧 #issue";
-
+        else if (c_d == "deleted")
+        {
+            mess = "🤖: [" + usr_name + "]" + "(" + usr_url + ")" + " *deleted at* " + "[#" + to_string(isu_num) + "]" + "(" + isu_url + ") 👀" + "\n\n" + "👉 " + isu_comm + "\n\n🚧 #issue";
         }
     }
-    else if (events=="pull_request") {
+    else if (events == "pull_request")
+    {
         string c_d = x["action"].s();
         int pull_no = x["number"].i();
         string pull_url = x["pull_request"]["html_url"].s();
         string pull_title = x["pull_request"]["title"].s();
-        mess = "🤖: [" + usr_name + "]"+"(" + usr_url + ") " + "*" + c_d + "*" + " *at* " + "[#" + to_string(pull_no) + "]" + "(" + pull_url + ") 🏃" + "\n\n" + "👉 " + pull_title +"\n\n🚧 #PullRequest";
+        mess = "🤖: [" + usr_name + "]" + "(" + usr_url + ") " + "*" + c_d + "*" + " *at* " + "[#" + to_string(pull_no) + "]" + "(" + pull_url + ") 🏃" + "\n\n" + "👉 " + pull_title + "\n\n🚧 #PullRequest";
     }
-    else if(events=="push") {
+    else if (events == "push")
+    {
         string push_url = x["head_commit"]["url"].s();
         string push_id = x["head_commit"]["id"].s();
-        mess = "🤖: [" + usr_name + "]"+"(" + usr_url + ")" + " *pushed at* " + "[#" + push_id.substr(0, 7) + "]" + "(" + push_url + ") 🌡️" + "\n\n🚧 #Pushed";
+        mess = "🤖: [" + usr_name + "]" + "(" + usr_url + ")" + " *pushed at* " + "[#" + push_id.substr(0, 7) + "]" + "(" + push_url + ") 🌡️" + "\n\n🚧 #Pushed";
     }
     return mess;
-
 }
