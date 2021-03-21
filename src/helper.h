@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int usr_id = atoi(getenv("USER_ID"));
+long usr_id = atol(getenv("USER_ID"));
 string usr_bot = getenv("TOKEN");
 
 char *port = getenv("PORT");
@@ -15,7 +15,7 @@ uint16_t PORT = static_cast<uint16_t>(port != NULL ? atoi(port) : 18080);
 
 string rep_mess = "Hey! I am working ⚡"; // Reply message after sending /start to your bot (only works if webhook is set)
 
-void send_mess(string message, int usr)
+void send_mess(string message, long usr)
 {
     string gcmd = string("curl ") + "-X " + "POST " + "-H " + "'Content-Type=application/json' " + "-d " + "'chat_id=" + to_string(usr) + "&text=" + message + "&disable_notification=false&parse_mode=markdown&disable_web_page_preview=true' " + "https://api.telegram.org/bot" + usr_bot + "/sendMessage";
     system(gcmd.c_str());
