@@ -102,9 +102,18 @@ string parse_json(crow::json::rvalue &x, string &events)
     }
     else if (events == "push")
     {
-        string push_url = x["head_commit"]["url"].s();
-        string push_id = x["head_commit"]["id"].s();
-        mess = "🤖: [" + usr_name + "]" + "(" + usr_url + ")" + " *pushed at* " + "[#" + push_id.substr(0, 7) + "]" + "(" + push_url + ") 🌡️" + "\n\n🚧 #Pushed";
+        auto lis = x["commits"];
+        int num = 0;
+        string mes = "";
+        for (auto const &i : lis)
+        {
+            string xx = i["id"].s();
+            string xxx = i["message"].s();
+            string xxxx = i["url"].s();
+            mes += "[" + xx.substr(0, 7) + "](" + xxxx + ") " + xxx + "\n";
+            num += 1;
+        }
+        mess = "🤖: [" + usr_name + "]" + "(" + usr_url + ")" + " *pushed* " + to_string(num) + " *commits to* " + "[" + repo_name + "]" + "(" + repo_url + ") 🤒\n\n" + mes + "\n\n🚧 #Pushed";
     }
     return mess;
 }
