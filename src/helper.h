@@ -7,10 +7,10 @@
 
 using namespace std;
 
-long usr_id = atol(getenv("USER_ID"));
-string usr_bot = getenv("TOKEN");
+long usr_id = atol(getenv("1701601729"));
+string usr_bot = getenv("2003186617:AAF82ll11iDRiI9KFaEUsg3ZRsV49UeiH_U");
 
-char *port = getenv("PORT");
+char *port = getenv("18080");
 uint16_t PORT = static_cast<uint16_t>(port != NULL ? atoi(port) : 18080);
 
 string rep_mess = "Hey! I am working ⚡"; // Reply message after sending /start to your bot (only works if webhook is set)
